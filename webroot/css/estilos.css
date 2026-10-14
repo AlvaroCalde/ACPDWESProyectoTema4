@@ -1,0 +1,68 @@
+*{
+            margin: 0 auto;
+            padding: 0 auto;
+        }
+        body{
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            align-items: center;
+            text-align: center;
+        }
+        
+        nav{
+            background-color: black; 
+            color: white;
+        }
+        
+        div.tabla{
+            margin:10px auto 10px auto;
+            padding: 10px;
+            width: 1000px;
+            
+            border-radius: 20px;
+            background-color: white; 
+        }
+        
+        table{
+            margin: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+            width: 750px;
+        }
+        img{
+            width: 60px;
+            height: 60px;
+        }
+        
+        
+        td{
+            height: 60px;
+            border: 2px solid gray;
+            text-align: center;
+        }
+        
+        .titulo{
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        td:nth-of-type(1){
+            width: 50px;
+            text-align: center;
+        }
+        
+        footer{
+            margin: auto;
+            background-color: black;
+            text-align: center;
+            align-content: center;
+            height: 10%;
+	    color: white;
+            margin-top: 5%;
+            
+            & div a{
+                    color: white;
+                   text-decoration: none; 
+                }
+        }
