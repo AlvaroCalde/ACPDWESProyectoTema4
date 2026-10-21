@@ -26,7 +26,9 @@
                 & div a{ color: white; 
                          text-decoration: none; }
             }
-            
+            footer a img{
+                width: 40px;
+            }
         </style>
     </head>
     <body>
@@ -37,56 +39,52 @@
         <main>
             <div class="ejercicio">
                 <?php
-                    require_once '../config/configDB00.php';
-                    
-                    $aAtributos = array(
-                        "AUTOCOMMIT", "ERRMODE", "CASE", "CLIENT_VERSION", "CONNECTION_STATUS",
-                        "ORACLE_NULLS", "PERSISTENT", "PREFETCH", "SERVER_INFO", "SERVER_VERSION",
-                        "TIMEOUT"
-                    );
-                    
-                    // variable para contar el numero de registros recuperados de la BBDD
-                    $numRegistros = 0;
-                                                          
+                    require_once '../config/configDBPDO.php';
+                                  
+                    $sql='SELECT * FROM T02_Departamento';
+                                                                      
                     try {
                         $miDB = new PDO(DSN,USERNAME,PASSWORD);
-                        echo 'Conectado a la BBDD con éxito';
+                        echo 'Tabla departamentos con query';
                         echo '<br><br>';
 
-                        $consulta = $miDB->query('SELECT * FROM T02_Departamento');
+                        $consulta = $miDB->query($sql);
                         
                         echo '<table>';
                         echo '<tr class="titulo">';
-                        echo '<td>T02_CodDepartamento</td>';
-                        echo '<td>T02_DescDepartamento</td>';
-                        echo '<td>T02_FechaCreaciónDepartamento</td>';
-                        echo '<td>T02_FechaBajaDeparamento</td>';
-                        echo '<td>T02_VolumenDeNegocio</td>';
+                        echo '<td>Código</td>';
+                        echo '<td>Descripción</td>';
+                        echo '<td>FechaCreación</td>';
+                        echo '<td>VolumenDeNegocio</td>';
+                        echo '<td>FechaBaja</td>';                       
                         echo '</tr>';
                         
-                        while ($registro = $consulta ->fetch()){
+                        // Utilizamos fetchObject()
+                        while ($Departamento = $consulta->fetchObject()){
                             echo '<tr>';
-                            echo '<td>'.$registro['T02_CodDepartamento'].'</td>';
-                            echo '<td>'.$registro["T02_DescDepartamento"].'</td>';
+                            // Accedemos a los campos como propiedades del objeto
+                            echo '<td>'.$Departamento->T02_CodDepartamento.'</td>';
+                            echo '<td>'.$Departamento->T02_DescDepartamento.'</td>';
+                            
                             // construimos la fecha a partir de la que hay en la bbdd y luego mostramos sólo dia mes y año
-                            $oFecha = new DateTime($registro["T02_FechaCreacionDepartamento"]);
-                            echo '<td>'.$oFecha->format('d/m/Y').'</td>';
+                            $oFechaCreacion = new DateTime($Departamento->T02_FechaCreacionDepartamento);
+                            echo '<td>'.$oFechaCreacion->format('d/m/Y').'</td>';
+                            
                             // formateamos el float para que se vea en €
-                            echo '<td>'.number_format($registro["T02_VolumenDeNegocio"],2,',','.').' €</td>';
-                            if (is_null($registro["T02_FechaBajaDepartamento"])) {
+                            echo '<td>'.number_format($Departamento->T02_VolumenDeNegocio,2,',','.').' €</td>';
+                            
+                            if (is_null($Departamento->T02_FechaBajaDepartamento)) {
                                 echo '<td></td>';
                             } else {
-                                $oFecha = new DateTime($registro["T02_FechaBajaDepartamento"]);
-                                echo '<td>'.$oFecha->format('d/m/Y').'</td>';
+                                $oFechaBaja = new DateTime($Departamento->T02_FechaBajaDepartamento);
+                                echo '<td>'.$oFechaBaja->format('d/m/Y').'</td>';
                             }
                             echo '</tr>';
-                            $numRegistros++;
                         }
                         
                         echo '</table>';
 
-                        echo '<h3>Número de registros: '.$numRegistros.'</h3>';
-
+                        echo '<h3>Número de registros: '.$consulta->rowCount().'</h3>';
 
                     } catch (PDOException $miExceptionPDO) {
                         echo 'Error: '.$miExceptionPDO->getMessage();
@@ -95,15 +93,14 @@
                     } finally {
                         unset($miDB);
                     }
-
-                    
                 ?>
             </div>
         </main>
         <footer>
             <div>
                 <a href="../indexProyectoTema4.php" color="white">Álvaro Calderón Pérez</a>
-                <time datetime="2026-10-16">16-10-2026</time>
+                <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
+                <time datetime="2026-10-21">21-10-2026</time>
             </div>
         </footer>
     </body>

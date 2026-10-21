@@ -79,7 +79,7 @@
             <table>
                 <tbody>
                     <tr class="titulo">
-                        <td>Script</td>
+                        <td>Ficheros utilizados</td>
                         <td>Código</td>
                     </tr>
                     <tr>
@@ -93,6 +93,10 @@
                     <tr>
                         <td>Script Delete</td>
                         <td><a href="./mostrarCodigo/muestraScriptDelete.php" class="btn btn-codigo">Codigo</a></td>
+                    </tr>
+                    <tr>
+                        <td>ConfigDBPDO</td>
+                        <td><a href="./mostrarCodigo/muestraconfigDBPDO.php" class="btn btn-codigo">Codigo</a></td>
                     </tr>
                 </tbody>
             </table>
@@ -127,8 +131,8 @@
                     <tr>
                         <td>3</td>
                         <td>Formulario para añadir un departamento a la tabla Departamento con validación de entrada y control de errores.</td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
+                        <td><a href="./codigoPHP/ejercicio03PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
+                        <td><a href="./mostrarCodigo/muestraEjercicio03PDO.php" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                     </tr>

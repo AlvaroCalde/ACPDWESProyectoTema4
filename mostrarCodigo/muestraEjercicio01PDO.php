@@ -33,6 +33,9 @@
                 text-align: center;
                 border-bottom: 2px solid black;
             }
+            footer a img{
+                width: 40px;
+            }
         </style>
     </head>
     <body>
@@ -52,6 +55,7 @@
                 <a href="../indexProyectoTema3.php">
                Álvaro Calderón Pérez
                 </a>
+                <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
                 <time datetime="2026-10-16">16-10-2026</time>
             </div>
         </footer>
