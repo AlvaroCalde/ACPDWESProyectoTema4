@@ -119,8 +119,8 @@
                     <tr>
                         <td>2</td>
                         <td>Mostrar el contenido de la tabla Departamento y el número de registros</td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
+                        <td><a href="./codigoPHP/ejercicio02PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
+                        <td><a href="./mostrarCodigo/muestraEjercicio02PDO.php" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                     </tr>

@@ -44,6 +44,9 @@
                         "ORACLE_NULLS", "PERSISTENT", "PREFETCH", "SERVER_INFO", "SERVER_VERSION",
                         "TIMEOUT"
                     );
+                    
+                    // variable para contar el numero de registros recuperados de la BBDD
+                    $numRegistros = 0;
                                                           
                     try {
                         $miDB = new PDO(DSN,USERNAME,PASSWORD);
@@ -61,12 +64,28 @@
                         echo '<td>T02_VolumenDeNegocio</td>';
                         echo '</tr>';
                         
-                        while ($registro = $consulta ->fetchObject()){
+                        while ($registro = $consulta ->fetch()){
                             echo '<tr>';
-                            echo '<td></td>';
-                            
+                            echo '<td>'.$registro['T02_CodDepartamento'].'</td>';
+                            echo '<td>'.$registro["T02_DescDepartamento"].'</td>';
+                            // construimos la fecha a partir de la que hay en la bbdd y luego mostramos sólo dia mes y año
+                            $oFecha = new DateTime($registro["T02_FechaCreacionDepartamento"]);
+                            echo '<td>'.$oFecha->format('d/m/Y').'</td>';
+                            // formateamos el float para que se vea en €
+                            echo '<td>'.number_format($registro["T02_VolumenDeNegocio"],2,',','.').' €</td>';
+                            if (is_null($registro["T02_FechaBajaDepartamento"])) {
+                                echo '<td></td>';
+                            } else {
+                                $oFecha = new DateTime($registro["T02_FechaBajaDepartamento"]);
+                                echo '<td>'.$oFecha->format('d/m/Y').'</td>';
+                            }
                             echo '</tr>';
+                            $numRegistros++;
                         }
+                        
+                        echo '</table>';
+
+                        echo '<h3>Número de registros: '.$numRegistros.'</h3>';
 
 
                     } catch (PDOException $miExceptionPDO) {
