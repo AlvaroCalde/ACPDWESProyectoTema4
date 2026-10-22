@@ -2,7 +2,7 @@
 <html lang="es">
     <head>
             <meta charset="UTF-8">
-        <title>Ejercicio 2 PDO</title>
+        <title>Ejercicio 3 PDO</title>
         <style>
             *{
                 margin: 0 auto;
@@ -41,7 +41,7 @@
     <body>
         <nav>
             <h2>DWES - Tema 4</h2>
-            <h2>Ejercicio 2 PDO</h2>
+            <h2>Ejercicio 3 PDO</h2>
         </nav>
         <main>
             <div class="ejercicio">

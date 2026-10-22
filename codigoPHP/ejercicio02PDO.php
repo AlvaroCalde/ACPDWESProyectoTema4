@@ -7,6 +7,9 @@
             *{ margin: 0 auto; padding: 0 auto; }
             nav{ background-color: black; color: white; }
             span{ color: red; }
+            table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+            td, th { border: 1px solid black; padding: 8px; text-align: center; }
+            .titulo th { font-weight: bold; background-color: #ddd; }
             .ejercicio{
                 padding: 50px;
                 margin-top: 10px;
@@ -98,7 +101,7 @@
         </main>
         <footer>
             <div>
-                <a href="../indexProyectoTema4.php" color="white">Álvaro Calderón Pérez</a>
+                <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php" color="white">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
                 <time datetime="2026-10-21">21-10-2026</time>
             </div>
