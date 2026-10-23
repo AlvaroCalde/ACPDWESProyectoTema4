@@ -20,6 +20,8 @@
             td, th { border: 1px solid black; padding: 8px; text-align: center; }
             .titulo th { font-weight: bold; background-color: #ddd; }
             .exito { color: green; font-weight: bold; text-align: center; margin-bottom: 15px;}
+            .nuevaFila { background-color: #FFEA80; }
+            
             footer{
                 background-color: black; 
                 text-align: center; 
@@ -52,31 +54,37 @@
                     $aErrores = [
                         'T02_CodDepartamento' => '',
                         'T02_DescDepartamento' => '',
+                        'T02_FechaCreacionDepartamento' => '',
                         'T02_VolumenDeNegocio' => ''
                     ];
                     $aRespuestas = [
                         'T02_CodDepartamento' => '',
                         'T02_DescDepartamento' => '',
+                        'T02_FechaCreacionDepartamento' => '',
                         'T02_VolumenDeNegocio' => ''
                     ];
                     
-                    $fechaActual = date('Y-m-d');
+                    $fechaActual = date('Y-m-d'); 
                     $entradaOK = true;
                     
-                     //Para cada campo del formulario se valida la entrada y se actua en consecuencia
-                    if (isset($_REQUEST['enviar'])) {//se cumple si el boton es submit
-                        //Validación de los datos de los campos del formulario
-                        $aErrores['T02_CodDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['T02_CodDepartamento'], 80, 1, 1);
-                        $aErrores['T02_DescDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['T02_DescDepartamento'], 50, 1, 1);
+                    if (isset($_REQUEST['enviar'])) {
                         
-                        // Reemplazar la coma por un punto antes de validar
-                        $volumenProcesado = str_replace(',', '.', $_REQUEST['T02_VolumenDeNegocio']);
-                        $aErrores['T02_VolumenDeNegocio'] = validacionFormularios::comprobarFloat($volumenProcesado);
+                        // Validación de código: alfabético de 3 letras mínimo y máximo
+                        $aErrores['T02_CodDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['T02_CodDepartamento'], 3, 3, 1);
+                        
+                        // Verificación extra para asegurar que sean estrictamente mayúsculas
+                        if (empty($aErrores['T02_CodDepartamento']) && !preg_match('/^[A-Z]{3}$/', $_REQUEST['T02_CodDepartamento'])) {
+                            $aErrores['T02_CodDepartamento'] = "El código debe contener exactamente 3 letras mayúsculas.";
+                        }
+
+                        $aErrores['T02_DescDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['T02_DescDepartamento'], 50, 1, 1);
+                        $aErrores['T02_FechaCreacionDepartamento'] = validacionFormularios::validarFecha($_REQUEST['T02_FechaCreacionDepartamento'], $fechaActual, "1900-01-01", 1);                      
+                        $aErrores['T02_VolumenDeNegocio'] = validacionFormularios::comprobarFloatMonetarioES($_REQUEST['T02_VolumenDeNegocio'], PHP_FLOAT_MAX, 0, 1);
 
                         //recorre el array de errores para detectar si hay alguno
                         foreach ($aErrores as $campo => $valorCampo) {
-                            if ($valorCampo != null) {//Si encuentra algún error 
-                                $entradaOK = false; // la entrada no es correcta
+                            if ($valorCampo != null) {
+                                $entradaOK = false; 
                             }
                         }
                     } else {
@@ -89,34 +97,31 @@
                         //Rellenamos el array de respuesta con los valores que ha introducido el usuario
                         $aRespuestas['T02_CodDepartamento'] = $_REQUEST['T02_CodDepartamento'];
                         $aRespuestas['T02_DescDepartamento'] = $_REQUEST['T02_DescDepartamento'];
-                        $aRespuestas['T02_VolumenDeNegocio'] = str_replace(',', '.', $_REQUEST['T02_VolumenDeNegocio']);
+                        $aRespuestas['T02_FechaCreacionDepartamento'] = $_REQUEST['T02_FechaCreacionDepartamento'];
+                        $aRespuestas['T02_VolumenDeNegocio'] = floatval(str_replace(',', '.', $_REQUEST['T02_VolumenDeNegocio']));
 
                         try {
-                            // Iniciamos el objeto PDO con los valores de las constantes.
                             $miDB = new PDO(DSN, USERNAME, PASSWORD);
-                            // Activamos el modo de excepciones de PDO por seguridad
                             $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                             
-                            // PASO 1: INSERTAR LOS DATOS EN LA BASE DE DATOS
                             $sqlInsert = <<<sql
                                 INSERT INTO T02_Departamento (T02_CodDepartamento, T02_DescDepartamento, T02_FechaCreacionDepartamento, T02_VolumenDeNegocio, T02_FechaBajaDepartamento)
-                                VALUES (?, ?, now(), ?, null)
+                                VALUES (?, ?, ?, ?, null)
                             sql;
                             
                             $consultaInsert = $miDB->prepare($sqlInsert);
                             $consultaInsert->bindParam(1, $aRespuestas['T02_CodDepartamento']);
                             $consultaInsert->bindParam(2, $aRespuestas['T02_DescDepartamento']);
-                            $consultaInsert->bindParam(3, $aRespuestas['T02_VolumenDeNegocio']);
+                            $consultaInsert->bindParam(3, $aRespuestas['T02_FechaCreacionDepartamento']);
+                            $consultaInsert->bindParam(4, $aRespuestas['T02_VolumenDeNegocio']);
                             
                             if($consultaInsert->execute()){
                                 echo '<p class="exito">¡El departamento ha sido insertado correctamente en la Base de Datos!</p>';
                             }
                             
-                            // PASO 2: SELECCIONAR Y MOSTRAR TODOS LOS DATOS (INCLUYENDO EL NUEVO)
                             $sqlSelect = "SELECT * FROM T02_Departamento";
                             $consultaSelect = $miDB->query($sqlSelect);
                         
-                            // Formateamos la salida para que los valores dentro de la tabla salgan en forma de tabla en HTML.
                             echo '<table>';
                             echo '<tr class="titulo">';
                             echo '<th>Código</th>';
@@ -126,14 +131,19 @@
                             echo '<th>Fecha de Baja</th>';                       
                             echo '</tr>';
 
-                            // Utilizamos fetchObject() para sacar cada fila
-                            while ($Departamento = $consultaSelect->fetchObject()){
-                                echo '<tr>';
+                            while ($Departamento = $consultaSelect->fetchObject()){                              
+                                // Comprobamos si el código de esta fila es igual al que acabamos de insertar para resaltarlo
+                                if ($Departamento->T02_CodDepartamento === $aRespuestas['T02_CodDepartamento']) {
+                                    echo '<tr class="nuevaFila">'; 
+                                } else {
+                                    echo '<tr>'; 
+                                }
+                                
                                 // Datos básicos
                                 echo '<td>' . htmlspecialchars($Departamento->T02_CodDepartamento) . '</td>';
                                 echo '<td>' . htmlspecialchars($Departamento->T02_DescDepartamento) . '</td>';
 
-                                // Procesamiento seguro de Fecha de Creación
+                                // Procesamiento de Fecha de Creación
                                 if (!empty($Departamento->T02_FechaCreacionDepartamento)) {
                                     $oFechaCreacion = new DateTime($Departamento->T02_FechaCreacionDepartamento);
                                     echo '<td>' . $oFechaCreacion->format('d/m/Y') . '</td>';
@@ -141,10 +151,10 @@
                                     echo '<td>Desconocida</td>';
                                 }
 
-                                // Formateamos el float para que se vea en € con formato europeo
+                                // Formateamos el float para que se vea en €
                                 echo '<td>' . number_format((float)$Departamento->T02_VolumenDeNegocio, 2, ',', '.') . ' €</td>';
 
-                                // Procesamiento de Fecha de Baja (Si es nula, mostramos "Activo")
+                                // Procesamiento de Fecha de Baja
                                 if (is_null($Departamento->T02_FechaBajaDepartamento) || empty($Departamento->T02_FechaBajaDepartamento)) {
                                     echo '<td>Activo</td>';
                                 } else {
@@ -156,11 +166,9 @@
 
                             echo '</table>';
                         
-                            // Botón para volver al formulario
                             echo '<br><a href="' . $_SERVER['PHP_SELF'] . '"><button>Volver a insertar otro</button></a>';
                         
                         } catch(PDOException $ePDO) {
-                            // Captura si el código ya existe (Primary Key repetida) o cualquier otro error SQL
                             if ($ePDO->getCode() == 23000) {
                                 echo '<p style="color:red; text-align:center;">Error: El código del departamento ya existe en la Base de Datos.</p>';
                                 echo '<br><a href="' . $_SERVER['PHP_SELF'] . '"><button>Volver</button></a>';
@@ -172,7 +180,7 @@
                         }
 
                     } else {
-                        //si hay algún error se vuelve a mostrar el formulario
+                        // Mostrar formulario
                     ?>
                     <section>
                         <h2>Rellena el formulario.</h2>
@@ -180,21 +188,22 @@
 
                             <label for="T02_CodDepartamento">Código de departamento: </label>
                             <span class="error"><?php echo $aErrores['T02_CodDepartamento'] ?></span>
-                            <input class="obligatorio" name="T02_CodDepartamento" id="T02_CodDepartamento" type="text" value="<?php echo $_REQUEST['T02_CodDepartamento'] ?? ''; ?>"><br>
+                            <input class="obligatorio" name="T02_CodDepartamento" id="T02_CodDepartamento" type="text" title="Debe contener exactamente 3 letras mayúsculas" value="<?php echo !empty($_REQUEST['T02_CodDepartamento']) ? htmlspecialchars($_REQUEST['T02_CodDepartamento']) : ''; ?>"><br>
                             <br>
                             
                             <label for="T02_DescDepartamento">Descripción del departamento: </label>
                             <span class="error"><?php echo $aErrores['T02_DescDepartamento'] ?></span>
-                            <input class="obligatorio" name="T02_DescDepartamento" id="T02_DescDepartamento" type="text" value="<?php echo $_REQUEST['T02_DescDepartamento'] ?? ''; ?>"><br>
+                            <input class="obligatorio" name="T02_DescDepartamento" id="T02_DescDepartamento" type="text" value="<?php echo !empty($_REQUEST['T02_DescDepartamento']) ? htmlspecialchars($_REQUEST['T02_DescDepartamento']) : ''; ?>"><br>
                             <br>
                             
                             <label for="T02_FechaCreacionDepartamento">Introduzca fecha de creación: </label>
-                            <input class="lectura" type="date" name="T02_FechaCreacionDepartamento" id="T02_FechaCreacionDepartamento" value="<?php echo $fechaActual;?>" readonly><br>
+                            <span class="error"><?php echo $aErrores['T02_FechaCreacionDepartamento'] ?></span>
+                            <input type="date" name="T02_FechaCreacionDepartamento" id="T02_FechaCreacionDepartamento" max="<?php echo $fechaActual; ?>" value="<?php echo !empty($_REQUEST['T02_FechaCreacionDepartamento']) && empty($aErrores['T02_FechaCreacionDepartamento']) ? htmlspecialchars($_REQUEST['T02_FechaCreacionDepartamento']) : $fechaActual; ?>"><br>
                             <br>
                             
                             <label for="T02_VolumenDeNegocio">Introduzca el volumen del negocio: </label>
                             <span class="error"><?php echo $aErrores['T02_VolumenDeNegocio'] ?></span>
-                            <input type="text" name="T02_VolumenDeNegocio" id="T02_VolumenDeNegocio" pattern="^[0-9]+(,[0-9]+)?$" title="Introduce un número usando coma para los decimales" value="<?php echo $_REQUEST['T02_VolumenDeNegocio'] ?? ''; ?>"><br>
+                            <input type="text" name="T02_VolumenDeNegocio" id="T02_VolumenDeNegocio" title="Usar comas para separar decimales" value="<?php echo !empty($_REQUEST['T02_VolumenDeNegocio']) ? htmlspecialchars($_REQUEST['T02_VolumenDeNegocio']) : ''; ?>"><br>
                             <br>
                             
                             <button type="submit" name="enviar">Enviar</button>
@@ -209,10 +218,10 @@
         </main>
         <footer>
             <div>
-                <a href="../indexProyectoTema4.php" color="white">Álvaro Calderón Pérez</a>
+                <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
-                <time datetime="2026-10-21">21-10-2026</time>
+                <time datetime="2026-10-22">22-10-2026</time>
             </div>
         </footer>
     </body>
-</html>                                  
+</html>            

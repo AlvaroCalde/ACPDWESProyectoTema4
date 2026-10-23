@@ -22,13 +22,16 @@
                 align-content: center;
                 height: 50px; 
                 color: white; 
-                margin-top: 20%;
+                margin-top: 15%;
                 & div a{ color: white; 
                          text-decoration: none; }
             }
             footer a img{
                 width: 40px;
             }
+            table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+            td, th { border: 1px solid black; padding: 8px; text-align: center; }
+            .titulo th { font-weight: bold; background-color: #ddd; }
         </style>
     </head>
     <body>
@@ -73,12 +76,12 @@
                             // formateamos el float para que se vea en €
                             echo '<td>'.number_format($Departamento->T02_VolumenDeNegocio,2,',','.').' €</td>';
                             
-                            if (is_null($Departamento->T02_FechaBajaDepartamento)) {
-                                echo '<td></td>';
-                            } else {
-                                $oFechaBaja = new DateTime($Departamento->T02_FechaBajaDepartamento);
-                                echo '<td>'.$oFechaBaja->format('d/m/Y').'</td>';
-                            }
+                            if (is_null($Departamento->T02_FechaBajaDepartamento) || empty($Departamento->T02_FechaBajaDepartamento)) {
+                                    echo '<td>Activo</td>';
+                                } else {
+                                    $oFechaBaja = new DateTime($Departamento->T02_FechaBajaDepartamento);
+                                    echo '<td>' . $oFechaBaja->format('d/m/Y') . '</td>';
+                                }
                             echo '</tr>';
                         }
                         
@@ -98,7 +101,7 @@
         </main>
         <footer>
             <div>
-                <a href="../indexProyectoTema4.php" color="white">Álvaro Calderón Pérez</a>
+                <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php" color="white">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
                 <time datetime="2026-10-21">21-10-2026</time>
             </div>
