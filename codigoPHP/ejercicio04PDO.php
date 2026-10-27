@@ -3,7 +3,7 @@
     <head>
         <title>Ejercicio 4 PDO</title>
         <style>
-            input[type="text"],input[type="date"],input[type="number"]{ background-color: #fff9c4; }
+            input[type="text"] { background-color: #fff9c4; }
             *{ margin: 0 auto; padding: 0 auto; }
             nav{ background-color: black; color: white; }
             span.error { color: red; display: block; font-size: 13px; min-height: 16px; }
@@ -16,10 +16,19 @@
                 border-radius: 10px;
                 p { font-weight: bold; }
             }
+            .buscador {
+                background-color: #f2f2f2;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 30px;
+                text-align: center;
+                border: 1px solid #ccc;
+            }
             table { border-collapse: collapse; width: 100%; margin-top: 20px; }
             td, th { border: 1px solid black; padding: 8px; text-align: center; }
             .titulo th { font-weight: bold; background-color: #ddd; }
-            .exito { color: green; font-weight: bold; text-align: center; margin-bottom: 15px;}
+            .sin-resultados { text-align: center; color: red; font-size: 18px; margin-top: 20px; }
+            
             footer{
                 background-color: black; 
                 text-align: center; 
@@ -42,63 +51,82 @@
         <main>
             <div class="ejercicio">
                 <?php
-                
                     setlocale(LC_TIME, 'es_ES.UTF-8', 'es_ES', 'spanish');
                     
                     require_once '../core/231018libreriaValidacion.php';
                     require_once '../config/configDBPDO.php';
-                    
-                    $sql2 = "SELECT * FROM T02_Departamento";
 
-                     //inicialización de variables
+                    // Estructura estándar de arrays para el formulario
                     $aErrores = [
-                        'T02_DescDepartamento' => '',
+                        'T02_DescDepartamento' => ''
                     ];
                     $aRespuestas = [
-                        'T02_DescDepartamento' => '',
+                        'T02_DescDepartamento' => ''
                     ];
                     
-                    
-                    
+
                     $entradaOK = true;
                     
-                     //Para cada campo del formulario se valida la entrada y se actua en consecuencia
-                    if (isset($_REQUEST['enviar'])) {
-                        $aErrores['T02_DescDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['T02_DescDepartamento'], 50, 1, 1);
-
+                    if (isset($_REQUEST['buscar'])) {
+                        // Comprobamos la entrada, pasando 0 al final para que sea OPCIONAL
+                        $aErrores['T02_DescDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['T02_DescDepartamento'], 50, 1, 0);
+                        
+                        // Recorremos el array de errores
                         foreach ($aErrores as $campo => $valorCampo) {
                             if ($valorCampo != null) {
                                 $entradaOK = false; 
                             }
                         }
+                        
+                        // Si todo es correcto, guardamos la respuesta y activamos la búsqueda
+                        if ($entradaOK) {
+                            $aRespuestas['T02_DescDepartamento'] = $_REQUEST['T02_DescDepartamento'];
+
+                        }
                     } else {
                         $entradaOK = false;
                     }
+                ?>
+                
 
-                    //Tratamiento del formulario
-                    if ($entradaOK) {
-                        $aRespuestas['T02_DescDepartamento'] = $_REQUEST['T02_DescDepartamento'];
-                        $desc='%'. $aRespuestas['T02_DescDepartamento'] . '%';                    
-                        $sql = "SELECT * FROM T02_Departamento WHERE T02_DescDepartamento LIKE '$desc'";
+                <section class="buscador">
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <label for="T02_DescDepartamento">Buscar por Descripción del Departamento:</label><br><br>
                         
+                        <input type="text" name="T02_DescDepartamento" id="T02_DescDepartamento" placeholder="Deja vacío para ver todos" value="<?php echo isset($_REQUEST['T02_DescDepartamento']) ? htmlspecialchars($_REQUEST['T02_DescDepartamento']) : ''; ?>">
+                        <span class="error"><?php echo $aErrores['T02_DescDepartamento']; ?></span>
+                        <br>
+                        
+                        <button type="submit" name="buscar">Buscar</button>
+                        <a href="../indexProyectoTema4.php"><button type="button">Volver</button></a>
+                    </form>  
+                </section>
 
+                <?php
+                    
                         try {
-                            $miDB = new PDO(DSN, USERNAME, PASSWORD);                           
-
-                            $resultado = $miDB->query($sql);
-                            echo '<table>';
-                            echo '<tr class="titulo">';
-                            echo '<th>Código</th>';
-                            echo '<th>Descripción</th>';
-                            echo '<th>Fecha de Creación</th>';
-                            echo '<th>Volumen de Negocio</th>';
-                            echo '<th>Fecha de Baja</th>';                       
-                            echo '</tr>';
+                            $miDB = new PDO(DSN, USERNAME, PASSWORD);
+                            $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                             
-                            if($resultado->rowCount()==0){
-                                $resultado=$miDB->query($sql2);
-                                while ($Departamento = $resultado->fetchObject()){
-                                    echo '<tr>';
+                            $busqueda = $aRespuestas['T02_DescDepartamento'];
+                            
+                            $sqlSelect = "SELECT * FROM T02_Departamento WHERE T02_DescDepartamento LIKE '%$busqueda%'";
+                            $consultaSelect = $miDB->query($sqlSelect);
+                            
+                            // Comprobamos si hay resultados
+                            if ($consultaSelect->rowCount() > 0) {
+                                echo '<table>';
+                                echo '<tr class="titulo">';
+                                echo '<th>Código</th>';
+                                echo '<th>Descripción</th>';
+                                echo '<th>Fecha de Creación</th>';
+                                echo '<th>Volumen de Negocio</th>';
+                                echo '<th>Fecha de Baja</th>';                       
+                                echo '</tr>';
+
+                                while ($Departamento = $consultaSelect->fetchObject()){                              
+                                    echo '<tr>'; 
+                                    
                                     echo '<td>' . htmlspecialchars($Departamento->T02_CodDepartamento) . '</td>';
                                     echo '<td>' . htmlspecialchars($Departamento->T02_DescDepartamento) . '</td>';
 
@@ -119,71 +147,26 @@
                                     }
                                     echo '</tr>';
                                 }
-
                                 echo '</table>';
                             } else {
-                                while ($Departamento = $resultado->fetchObject()){
-                                    echo '<tr>';
-                                    echo '<td>' . htmlspecialchars($Departamento->T02_CodDepartamento) . '</td>';
-                                    echo '<td>' . htmlspecialchars($Departamento->T02_DescDepartamento) . '</td>';
-
-                                    if (!empty($Departamento->T02_FechaCreacionDepartamento)) {
-                                        $oFechaCreacion = new DateTime($Departamento->T02_FechaCreacionDepartamento);
-                                        echo '<td>' . $oFechaCreacion->format('d/m/Y') . '</td>';
-                                    } else {
-                                        echo '<td>Desconocida</td>';
-                                    }
-
-                                    echo '<td>' . number_format((float)$Departamento->T02_VolumenDeNegocio, 2, ',', '.') . ' €</td>';
-
-                                    if (is_null($Departamento->T02_FechaBajaDepartamento) || empty($Departamento->T02_FechaBajaDepartamento)) {
-                                        echo '<td>Activo</td>';
-                                    } else {
-                                        $oFechaBaja = new DateTime($Departamento->T02_FechaBajaDepartamento);
-                                        echo '<td>' . $oFechaBaja->format('d/m/Y') . '</td>';
-                                    }
-                                    echo '</tr>';
-                                }
-                                echo '</table>';
+                                echo '<p class="sin-resultados">No se ha encontrado ningún departamento con esa descripción.</p>';
                             }
                         
-                            // Botón para volver al formulario
-                            echo '<br><a href="' . $_SERVER['PHP_SELF'] . '"><button>Volver al formulario</button></a>';
-                        
-                        } catch (PDOException $miExceptionPDO) {
-                            echo 'Error: '.$miExceptionPDO->getMessage();
-                            echo '<br>';
-                            echo 'Código de error: '.$miExceptionPDO->getCode();
+                        } catch(PDOException $ePDO) {
+                            echo '<p class="error">Error al conectarse a la base de datos: ' . $ePDO->getMessage() . '</p>';
                         } finally {
                             unset($miDB);
                         }
-                    } else {
-                        //si hay algún error se vuelve a mostrar el formulario
-                    ?>
-                    <section>
-                        <h2>Rellena el formulario.</h2>
-                        <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
-                            
-                            <label for="T02_DescDepartamento">Descripción del departamento a buscar: </label>
-                            <span class="error"><?php echo $aErrores['T02_DescDepartamento'] ?></span>
-                            <input class="obligatorio" name="T02_DescDepartamento" id="T02_DescDepartamento" type="text" value="<?php echo $_REQUEST['T02_DescDepartamento'] ?? ''; ?>"><br>
-                            <br>                                                      
-                            <button type="submit" name="enviar">Enviar</button>
-                            <a href="../indexProyectoTema4.php"><button type="button">Cancelar</button></a>
-                        </form>  
-                    </section>
-                        <?php
-                    }
+                    
                 ?>
             </div>
         </main>
         <footer>
             <div>
-                <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php" color="white">Álvaro Calderón Pérez</a>
+                <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
-                <time datetime="2026-10-23">23-10-2026</time>
+                <time datetime="2026-10-27">27-10-2026</time>
             </div>
         </footer>
     </body>
-</html>      
-
+</html>

@@ -138,7 +138,7 @@
                     </tr>
                     <tr>
                         <td>4</td>
-                        <td>Formulario de búsqueda de departamentos por descripción (por una parte del campo DescDepartamento, si el usuario no pone nada deben aparecer todos los departamentos).</td>
+                        <td>Formulario de búsqueda de departamentos por descripción (por una parte del campo DescDepartamento.</td>
                         <td><a href="./codigoPHP/ejercicio04PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="./mostrarCodigo/muestraEjercicio04PDO.php" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
@@ -146,7 +146,7 @@
                     </tr>
                     <tr>
                         <td>5</td>
-                        <td>Pagina web que añade tres registros a nuestra tabla Departamento utilizando tres instrucciones insert y una transacción, de tal forma que se añadan los tres registros o no se añada ninguno.</td>
+                        <td>Pagina web que añade tres registros a nuestra tabla Departamento utilizando tres instrucciones insert y una transacción</td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
@@ -162,7 +162,7 @@
                     </tr>
                     <tr>
                         <td>7</td>
-                        <td>Página web que toma datos (código y descripción) de un fichero xml y los añade a la tabla Departamento de nuestra base de datos. (IMPORTAR). El fichero importado se encuentra en el directorio .../tmp/ del servidor.</td>
+                        <td>Página web que toma datos (código y descripción) de un fichero xml y los añade a la tabla Departamento de nuestra base de datos.</td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
@@ -170,7 +170,7 @@
                     </tr>
                     <tr>
                         <td>8</td>
-                        <td>Página web que toma datos (código y descripción) de la tabla Departamento y guarda en un fichero departamento.xml. (COPIA DE SEGURIDAD / EXPORTAR). El fichero exportado se encuentra en el directorio .../tmp/ del servidor</td>
+                        <td>Página web que toma datos (código y descripción) de la tabla Departamento y guarda en un fichero departamento.xml.</td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
