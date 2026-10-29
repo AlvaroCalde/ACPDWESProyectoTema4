@@ -147,8 +147,8 @@
                     <tr>
                         <td>5</td>
                         <td>Pagina web que añade tres registros a nuestra tabla Departamento utilizando tres instrucciones insert y una transacción</td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
+                        <td><a href="./codigoPHP/ejercicio05PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
+                        <td><a href="./mostrarCodigo/muestraEjercicio05PDO.php" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                     </tr>

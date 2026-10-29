@@ -5,7 +5,7 @@
         <style>
             input[type="text"],input[type="date"],input[type="number"]{ background-color: #fff9c4; }
             *{ margin: 0 auto; padding: 0 auto; }
-            nav{ background-color: black; color: white; }
+            nav{ background-color: black; color: white; padding: 5px; text-align: center}
             span{ color: red; }
             .ejercicio{
                 padding: 50px;

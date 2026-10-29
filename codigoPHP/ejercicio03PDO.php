@@ -5,7 +5,7 @@
         <style>
             input[type="text"],input[type="date"],input[type="number"]{ background-color: #fff9c4; }
             *{ margin: 0 auto; padding: 0 auto; }
-            nav{ background-color: black; color: white; }
+            nav{ background-color: black; color: white; padding: 5px; text-align: center}
             span.error { color: red; display: block; font-size: 13px; min-height: 16px; }
             .ejercicio{
                 padding: 50px;
@@ -21,6 +21,10 @@
             .titulo th { font-weight: bold; background-color: #ddd; }
             .exito { color: green; font-weight: bold; text-align: center; margin-bottom: 15px;}
             .nuevaFila { background-color: #FFEA80; }
+            
+            /* Clases de alineación para la tabla */
+            .alinear-izq { text-align: left; }
+            .alinear-der { text-align: right; }
             
             footer{
                 background-color: black; 
@@ -125,9 +129,9 @@
                             echo '<table>';
                             echo '<tr class="titulo">';
                             echo '<th>Código</th>';
-                            echo '<th>Descripción</th>';
+                            echo '<th class="alinear-izq">Descripción</th>'; // Alineado a la izquierda
                             echo '<th>Fecha de Creación</th>';
-                            echo '<th>Volumen de Negocio</th>';
+                            echo '<th class="alinear-der">Volumen de Negocio</th>'; // Alineado a la derecha
                             echo '<th>Fecha de Baja</th>';                       
                             echo '</tr>';
 
@@ -141,7 +145,7 @@
                                 
                                 // Datos básicos
                                 echo '<td>' . htmlspecialchars($Departamento->T02_CodDepartamento) . '</td>';
-                                echo '<td>' . htmlspecialchars($Departamento->T02_DescDepartamento) . '</td>';
+                                echo '<td class="alinear-izq">' . htmlspecialchars($Departamento->T02_DescDepartamento) . '</td>'; // Alineado a la izquierda
 
                                 // Procesamiento de Fecha de Creación
                                 if (!empty($Departamento->T02_FechaCreacionDepartamento)) {
@@ -152,11 +156,11 @@
                                 }
 
                                 // Formateamos el float para que se vea en €
-                                echo '<td>' . number_format((float)$Departamento->T02_VolumenDeNegocio, 2, ',', '.') . ' €</td>';
+                                echo '<td class="alinear-der">' . number_format((float)$Departamento->T02_VolumenDeNegocio, 2, ',', '.') . ' €</td>'; // Alineado a la derecha
 
                                 // Procesamiento de Fecha de Baja
                                 if (is_null($Departamento->T02_FechaBajaDepartamento) || empty($Departamento->T02_FechaBajaDepartamento)) {
-                                    echo '<td>Activo</td>';
+                                    echo '<td></td>';
                                 } else {
                                     $oFechaBaja = new DateTime($Departamento->T02_FechaBajaDepartamento);
                                     echo '<td>' . $oFechaBaja->format('d/m/Y') . '</td>';
@@ -183,27 +187,31 @@
                         // Mostrar formulario
                     ?>
                     <section>
-                        <h2>Rellena el formulario.</h2>
+                        <h2>Alta de departamento.</h2>
                         <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
 
-                            <label for="T02_CodDepartamento">Código de departamento: </label>
+                            <label for="T02_CodDepartamento">Código: </label>
                             <span class="error"><?php echo $aErrores['T02_CodDepartamento'] ?></span>
-                            <input class="obligatorio" name="T02_CodDepartamento" id="T02_CodDepartamento" type="text" title="Debe contener exactamente 3 letras mayúsculas" value="<?php echo !empty($_REQUEST['T02_CodDepartamento']) ? htmlspecialchars($_REQUEST['T02_CodDepartamento']) : ''; ?>"><br>
+                            <!-- Se imprime si hay REQUEST y su error está vacío -->
+                            <input class="obligatorio" name="T02_CodDepartamento" id="T02_CodDepartamento" type="text" title="Debe contener exactamente 3 letras mayúsculas" value="<?php echo !empty($_REQUEST['T02_CodDepartamento']) && empty($aErrores['T02_CodDepartamento']) ? htmlspecialchars($_REQUEST['T02_CodDepartamento']) : ''; ?>"><br>
                             <br>
                             
-                            <label for="T02_DescDepartamento">Descripción del departamento: </label>
+                            <label for="T02_DescDepartamento">Descripción: </label>
                             <span class="error"><?php echo $aErrores['T02_DescDepartamento'] ?></span>
-                            <input class="obligatorio" name="T02_DescDepartamento" id="T02_DescDepartamento" type="text" value="<?php echo !empty($_REQUEST['T02_DescDepartamento']) ? htmlspecialchars($_REQUEST['T02_DescDepartamento']) : ''; ?>"><br>
+                            <!-- Se imprime si hay REQUEST y su error está vacío -->
+                            <input class="obligatorio" name="T02_DescDepartamento" id="T02_DescDepartamento" type="text" value="<?php echo !empty($_REQUEST['T02_DescDepartamento']) && empty($aErrores['T02_DescDepartamento']) ? htmlspecialchars($_REQUEST['T02_DescDepartamento']) : ''; ?>"><br>
                             <br>
                             
-                            <label for="T02_FechaCreacionDepartamento">Introduzca fecha de creación: </label>
+                            <label for="T02_FechaCreacionDepartamento">Fecha de creación: </label>
                             <span class="error"><?php echo $aErrores['T02_FechaCreacionDepartamento'] ?></span>
+                            <!-- Si hay error, se reinicia a la fecha actual -->
                             <input type="date" name="T02_FechaCreacionDepartamento" id="T02_FechaCreacionDepartamento" max="<?php echo $fechaActual; ?>" value="<?php echo !empty($_REQUEST['T02_FechaCreacionDepartamento']) && empty($aErrores['T02_FechaCreacionDepartamento']) ? htmlspecialchars($_REQUEST['T02_FechaCreacionDepartamento']) : $fechaActual; ?>"><br>
                             <br>
                             
-                            <label for="T02_VolumenDeNegocio">Introduzca el volumen del negocio: </label>
+                            <label for="T02_VolumenDeNegocio">Volumen de negocio: </label>
                             <span class="error"><?php echo $aErrores['T02_VolumenDeNegocio'] ?></span>
-                            <input type="text" name="T02_VolumenDeNegocio" id="T02_VolumenDeNegocio" title="Usar comas para separar decimales" value="<?php echo !empty($_REQUEST['T02_VolumenDeNegocio']) ? htmlspecialchars($_REQUEST['T02_VolumenDeNegocio']) : ''; ?>"><br>
+                            <!-- Se imprime si hay REQUEST y su error está vacío -->
+                            <input type="text" name="T02_VolumenDeNegocio" id="T02_VolumenDeNegocio" title="Usar comas para separar decimales" value="<?php echo !empty($_REQUEST['T02_VolumenDeNegocio']) && empty($aErrores['T02_VolumenDeNegocio']) ? htmlspecialchars($_REQUEST['T02_VolumenDeNegocio']) : ''; ?>"><br>
                             <br>
                             
                             <button type="submit" name="enviar">Enviar</button>
@@ -220,8 +228,8 @@
             <div>
                 <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
-                <time datetime="2026-10-22">22-10-2026</time>
+                <time datetime="2026-10-28">28-10-2026</time>
             </div>
         </footer>
     </body>
-</html>            
+</html>
