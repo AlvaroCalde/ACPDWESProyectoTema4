@@ -45,7 +45,8 @@
                     require_once '../config/configDBPDO.php';
                                   
                     $sql='SELECT * FROM T02_Departamento';
-                                                                      
+                                    
+                    echo '<h1>Sin consulta preparada</h1>';
                     try {
                         $miDB = new PDO(DSN,USERNAME,PASSWORD);
                         echo 'Tabla departamentos con query';
@@ -88,7 +89,54 @@
                         echo '</table>';
 
                         echo '<h3>Número de registros: '.$consulta->rowCount().'</h3>';
+                        
+                        echo '<h1>Con consulta preparada</h1>';
+                        $miDB = new PDO(DSN, USERNAME, PASSWORD);
 
+                        echo 'Tabla departamentos con prepare() y execute()';
+                        echo '<br><br>';
+
+                        // 1. Preparamos la consulta
+                        $consulta = $miDB->prepare($sql);
+
+                        // 2. Ejecutamos la consulta preparada
+                        $consulta->execute();
+
+                        echo '<table>';
+                        echo '<tr class="titulo">';
+                        echo '<td>Código</td>';
+                        echo '<td>Descripción</td>';
+                        echo '<td>FechaCreación</td>';
+                        echo '<td>VolumenDeNegocio</td>';
+                        echo '<td>FechaBaja</td>';                       
+                        echo '</tr>';
+
+                        // Utilizamos fetchObject()
+                        while ($Departamento = $consulta->fetchObject()){
+                            echo '<tr>';
+                            // Accedemos a los campos como propiedades del objeto
+                            echo '<td>'.$Departamento->T02_CodDepartamento.'</td>';
+                            echo '<td>'.$Departamento->T02_DescDepartamento.'</td>';
+
+                            // Construimos la fecha a partir de la que hay en la bbdd y luego mostramos sólo dia mes y año
+                            $oFechaCreacion = new DateTime($Departamento->T02_FechaCreacionDepartamento);
+                            echo '<td>'.$oFechaCreacion->format('d/m/Y').'</td>';
+
+                            // Formateamos el float para que se vea en €
+                            echo '<td>'.number_format($Departamento->T02_VolumenDeNegocio, 2, ',', '.').' €</td>';
+
+                            if (is_null($Departamento->T02_FechaBajaDepartamento) || empty($Departamento->T02_FechaBajaDepartamento)) {
+                                echo '<td>Activo</td>';
+                            } else {
+                                $oFechaBaja = new DateTime($Departamento->T02_FechaBajaDepartamento);
+                                echo '<td>' . $oFechaBaja->format('d/m/Y') . '</td>';
+                            }
+                            echo '</tr>';
+                        }
+
+                        echo '</table>';
+
+                        echo '<h3>Número de registros: '.$consulta->rowCount().'</h3>';
                     } catch (PDOException $miExceptionPDO) {
                         echo 'Error: '.$miExceptionPDO->getMessage();
                         echo '<br>';
@@ -103,7 +151,6 @@
             <div>
                 <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php" color="white">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
-                <time datetime="2026-10-21">21-10-2026</time>
             </div>
         </footer>
     </body>

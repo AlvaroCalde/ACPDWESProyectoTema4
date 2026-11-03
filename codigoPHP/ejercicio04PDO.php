@@ -108,15 +108,20 @@
                     
                         try {
                             $miDB = new PDO(DSN, USERNAME, PASSWORD);
-                            $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                             
-                            // En la consulta sí usamos T02_DescDepartamento porque es el nombre de la columna en la BD
-                            // Pero le pasamos el valor de nuestro array con el nuevo nombre
-                            $sql = "SELECT * FROM T02_Departamento WHERE T02_DescDepartamento LIKE '%{$aRespuestas['DepartamentoBusqueda']}%'";  
-                            $Departamentos = $miDB->query($sql);
+                            // Consulta preparada con el marcador posicional ?
+                            $sql = "SELECT * FROM T02_Departamento WHERE T02_DescDepartamento LIKE ?";
+                            $consultaSelect = $miDB->prepare($sql);
+                            
+                            // Construimos la variable con los comodines para usarla en bindParam
+                            $busqueda = '%' . $aRespuestas['DepartamentoBusqueda'] . '%';
+                            
+                            // Vinculamos el parámetro y ejecutamos
+                            $consultaSelect->bindParam(1, $busqueda);
+                            $consultaSelect->execute();
                             
                             // Comprobamos si hay resultados
-                            if ($Departamentos->rowCount() > 0) {
+                            if ($consultaSelect->rowCount() > 0) {
                                 echo '<table>';
                                 echo '<tr class="titulo">';
                                 echo '<th>Código</th>';
@@ -126,7 +131,8 @@
                                 echo '<th>Fecha de Baja</th>';                       
                                 echo '</tr>';
 
-                                while ($Departamento = $Departamentos->fetchObject()){                              
+                                // Usamos $consultaSelect (nuestra consulta preparada y ejecutada) en el while
+                                while ($Departamento = $consultaSelect->fetchObject()){                              
                                     echo '<tr>'; 
                                     
                                     echo '<td>' . htmlspecialchars($Departamento->T02_CodDepartamento) . '</td>';
@@ -169,7 +175,6 @@
             <div>
                 <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
-                <time datetime="2026-10-27">27-10-2026</time>
             </div>
         </footer>
     </body>

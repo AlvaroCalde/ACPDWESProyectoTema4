@@ -155,24 +155,24 @@
                     <tr>
                         <td>6</td>
                         <td>Pagina web que cargue registros en la tabla Departamento desde un array departamentosnuevos utilizando una consulta preparada.</td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
+                        <td><a href="./codigoPHP/ejercicio06PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
+                        <td><a href="./mostrarCodigo/muestraEjercicio06PDO.php" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                     </tr>
                     <tr>
                         <td>7</td>
                         <td>Página web que toma datos (código y descripción) de un fichero xml y los añade a la tabla Departamento de nuestra base de datos.</td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
+                        <td><a href="./codigoPHP/ejercicio07PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
+                        <td><a href="./mostrarCodigo/muestraEjercicio07PDO.php" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                     </tr>
                     <tr>
                         <td>8</td>
                         <td>Página web que toma datos (código y descripción) de la tabla Departamento y guarda en un fichero departamento.xml.</td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
+                        <td><a href="./codigoPHP/ejercicio08PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
+                        <td><a href="./mostrarCodigo/muestraEjercicio08PDO.php" class="btn btn-codigo">Codigo</a></td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                     </tr>

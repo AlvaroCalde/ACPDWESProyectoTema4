@@ -56,7 +56,7 @@
                Álvaro Calderón Pérez
                 </a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
-                <time datetime="2026-10-29">29-10-2026</time>
+
             </div>
         </footer>
     </body>

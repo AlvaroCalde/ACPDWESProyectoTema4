@@ -106,7 +106,6 @@
 
                         try {
                             $miDB = new PDO(DSN, USERNAME, PASSWORD);
-                            $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                             
                             $sqlInsert = <<<sql
                                 INSERT INTO T02_Departamento (T02_CodDepartamento, T02_DescDepartamento, T02_FechaCreacionDepartamento, T02_VolumenDeNegocio, T02_FechaBajaDepartamento)
@@ -228,7 +227,6 @@
             <div>
                 <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
-                <time datetime="2026-10-28">28-10-2026</time>
             </div>
         </footer>
     </body>
