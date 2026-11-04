@@ -51,7 +51,7 @@
        <?php
             /**
         * @author: Álvaro Calderón Pérez
-        * @since: 29/10/2026
+        * @since: 04/11/2026
         * Pagina web que añade tres registros a nuestra tabla Departamento utilizando tres instrucciones
         * insert y una transacción, de tal forma que se añadan los tres registros o no se añada ninguno.
         */
