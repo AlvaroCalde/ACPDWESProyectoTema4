@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ejercicio 8 PDO</title>
+    <title>Ejercicio 8 XML PDO</title>
     <link rel="stylesheet" href="../webroot/css/estilos08PDO.css">
 </head>
 <body>
     <nav>
         <h2>DWES - Tema 4</h2>
-        <h2>Ejercicio 8 PDO</h2>
+        <h2>Ejercicio 8 XML PDO</h2>
     </nav>
     <main class="ejercicio">
        <div class="buscador">

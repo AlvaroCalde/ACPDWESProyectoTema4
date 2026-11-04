@@ -40,8 +40,7 @@
                     try {
                         // Instanciacion del objeto PDO
                         $miDB = new PDO(DSN, USERNAME, PASSWORD);
-                        // Habilitar excepciones (muy importante para que el try/catch y las transacciones funcionen bien)
-                        $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 
                         // Instanciamos DOMDocument y cargamos el archivo XML
                         $documentoXML = new DOMDocument();
@@ -115,6 +114,7 @@
                             echo "<p>La transacción ha sido cancelada. Ningún registro ha sido importado.</p>";
                             echo "<p><b>Mensaje:</b> " . $miExceptionPDO->getMessage() . "</p>";
                             echo "<p><b>Código:</b> " . $miExceptionPDO->getCode() . "</p>";
+                            echo "<p><b>registros importados:</b> " . $registrosImportados . "</p>";
                         }
                         echo "</div>";
                     } finally {

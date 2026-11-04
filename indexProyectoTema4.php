@@ -7,68 +7,6 @@
     <meta name="author" content="Álvaro Calderón Pérez">
     <title>Tema 4-PHP Álvaro Calderón Pérez</title>
     <link rel="stylesheet" href="./webroot/css/estilos.css">
-    
-    <style>
-        /* Estilo base para todos los botones */
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            margin: 2px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Botones de "Ejecutar" (Verde) */
-        .btn-ejecutar {
-            background-color: #28a745;
-            color: white;
-            border: 1px solid #218838;
-        }
-
-        .btn-ejecutar:hover {
-            background-color: #218838;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        /* Botones de "Código" (Azul) */
-        .btn-codigo {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #0069d9;
-        }
-
-        .btn-codigo:hover {
-            background-color: #0069d9;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        /* ESTILO PARA BOTONES APAGADOS (Sin enlace válido) */
-        .btn[href=""], 
-        .btn[href="#"], 
-        .btn:not([href]) {
-            background-color: #6c757d !important; /* Gris */
-            color: #d3d3d3 !important;
-            border: 1px solid #5c636a !important;
-            pointer-events: none; /* Evita que el ratón haga clic */
-            opacity: 0.65; /* Aspecto deshabilitado */
-            box-shadow: none !important;
-            transform: none !important;
-        }
-        
-        /* Centrar el contenido de las celdas */
-        .tabla td, .tablaScript td {
-            vertical-align: middle;
-        }
-    </style>
 </head>
 <body>
     <nav>
@@ -163,35 +101,31 @@
                     <tr>
                         <td>7</td>
                         <td>Página web que toma datos (código y descripción) de un fichero xml y los añade a la tabla Departamento de nuestra base de datos.</td>
-                        <td><a href="./codigoPHP/ejercicio07PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="./mostrarCodigo/muestraEjercicio07PDO.php" class="btn btn-codigo">Codigo</a></td>
+                        <td>
+                            <a href="./codigoPHP/ejercicio07PDO.php" class="btn btn-ejecutar">Ejecutar XML</a>
+                            <a href="" class="btn btn-ejecutar">Ejecutar JSON</a>
+                        </td>
+                        <td>
+                            <a href="./mostrarCodigo/muestraEjercicio07PDO.php" class="btn btn-codigo">Codigo XML</a>
+                            <a href="" class="btn btn-codigo">Codigo JSON</a>
+                        </td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
                     </tr>
                     <tr>
                         <td>8</td>
-                        <td>Página web que toma datos (código y descripción) de la tabla Departamento y guarda en un fichero departamento.xml.</td>
-                        <td><a href="./codigoPHP/ejercicio08PDO.php" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="./mostrarCodigo/muestraEjercicio08PDO.php" class="btn btn-codigo">Codigo</a></td>
+                        <td>Página web que toma datos (código y descripción) de la tabla Departamento y guarda en un fichero departamentos.xml/departamentos.json.</td>
+                        <td>
+                            <a href="./codigoPHP/ejercicio08PDO.php" class="btn btn-ejecutar">Ejecutar XML</a>
+                            <a href="./codigoPHP/ejercicio08JSONPDO.php" class="btn btn-ejecutar">Ejecutar JSON</a>
+                        </td>
+                        <td>
+                            <a href="./mostrarCodigo/muestraEjercicio08PDO.php" class="btn btn-codigo">Codigo XML</a>
+                            <a href="./mostrarCodigo/muestraEjercicio08PDO.php" class="btn btn-codigo">Codigo JSON</a>
+                        </td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td>Aplicación resumen MtoDeDepartamentosTema4. (Incluir PHPDoc y versionado en el repositorio GIT)</td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>Aplicación resumen MtoDeDepartamentos POO y multicapa.</td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
-                        <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
-                        <td><a href="" class="btn btn-codigo">Codigo</a></td>
-                    </tr>                    
+                    </tr>                 
                 </tbody>
             </table>
         </div>

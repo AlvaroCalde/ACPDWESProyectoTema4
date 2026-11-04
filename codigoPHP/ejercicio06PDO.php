@@ -64,17 +64,17 @@
                 
                 $aDepartamentos = [
                     [
-                        "codDepartamento" => "AAA",
+                        "codigoDepartamento" => "AAA",
                         "descripcionDepartamento" => "aaaaaaa",
                         "volumenDepartamento" => 1000
                     ],
                     [
-                        "codDepartamento" => "BBB",
+                        "codigoDepartamento" => "BBB",
                         "descripcionDepartamento" => "bbbbbbbb",
                         "volumenDepartamento" => 1500
                     ],
                     [
-                        "codDepartamento" => "CCC",
+                        "codigoDepartamento" => "CCC",
                         "descripcionDepartamento" => "ccccccccc",
                         "volumenDepartamento" => 18000.55
                     ]
@@ -82,18 +82,17 @@
 
                 $miDB->beginTransaction(); 
 
-                // Preparacion de la sentencia SQL utilizando signos de interrogacion
-                $sqlInsert = 'INSERT INTO T02_Departamento VALUES (:codDepartamento, :desDepartamento, NOW(), :volumenNegocioDepartamento, NULL)';
+                $sqlInsert = 'INSERT INTO T02_Departamento VALUES (:codDepartamento, :descDepartamento, NOW(), :volumenNegocioDepartamento, NULL)';
                 $sentenciaPreparada = $miDB->prepare($sqlInsert);
 
                 // El execute debe recibir un array asociativo
                 foreach ($aDepartamentos as $departamento) {
                     $sentenciaPreparada->execute([
-                        "codDepartamento" => $departamento["codDepartamento"],
-                        "desDepartamento" => $departamento["descripcionDepartamento"],
+                        "codDepartamento" => $departamento["codigoDepartamento"],
+                        "descDepartamento" => $departamento["descripcionDepartamento"],
                         "volumenNegocioDepartamento" => $departamento["volumenDepartamento"]
                     ]);
-                    echo '<p>Insertado departamento con código: <b>' . $departamento["codDepartamento"] . '</b></p>';
+                    echo '<p>Insertado departamento con código: <b>' . $departamento["codigoDepartamento"] . '</b></p>';
                 }
 
                 $miDB->commit(); // Confirma los cambios y los consolida
