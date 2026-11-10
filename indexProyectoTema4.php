@@ -100,14 +100,14 @@
                     </tr>
                     <tr>
                         <td>7</td>
-                        <td>Página web que toma datos (código y descripción) de un fichero xml y los añade a la tabla Departamento de nuestra base de datos.</td>
+                        <td>Página web que toma datos (código y descripción) de un fichero xml/json y los añade a la tabla Departamento de nuestra base de datos.</td>
                         <td>
                             <a href="./codigoPHP/ejercicio07PDO.php" class="btn btn-ejecutar">Ejecutar XML</a>
-                            <a href="" class="btn btn-ejecutar">Ejecutar JSON</a>
+                            <a href="./codigoPHP/ejercicio07JSONPDO.php" class="btn btn-ejecutar">Ejecutar JSON</a>
                         </td>
                         <td>
                             <a href="./mostrarCodigo/muestraEjercicio07PDO.php" class="btn btn-codigo">Codigo XML</a>
-                            <a href="" class="btn btn-codigo">Codigo JSON</a>
+                            <a href="./mostrarCodigo/muestraEjercicio07JSONPDO.php" class="btn btn-codigo">Codigo JSON</a>
                         </td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
@@ -121,7 +121,7 @@
                         </td>
                         <td>
                             <a href="./mostrarCodigo/muestraEjercicio08PDO.php" class="btn btn-codigo">Codigo XML</a>
-                            <a href="./mostrarCodigo/muestraEjercicio08PDO.php" class="btn btn-codigo">Codigo JSON</a>
+                            <a href="./mostrarCodigo/muestraEjercicio08JSONPDO.php" class="btn btn-codigo">Codigo JSON</a>
                         </td>
                         <td><a href="" class="btn btn-ejecutar">Ejecutar</a></td>
                         <td><a href="" class="btn btn-codigo">Codigo</a></td>
