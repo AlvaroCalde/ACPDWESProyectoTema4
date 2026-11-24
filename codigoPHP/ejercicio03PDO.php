@@ -82,13 +82,47 @@
                         }
 
                         $aErrores['T02_DescDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['T02_DescDepartamento'], 50, 1, 1);
-                        $aErrores['T02_FechaCreacionDepartamento'] = validacionFormularios::validarFecha($_REQUEST['T02_FechaCreacionDepartamento'], $fechaActual, "1900-01-01", 1);                      
+                        $aErrores['T02_FechaCreacionDepartamento'] = validacionFormularios::validarFecha($_REQUEST['T02_FechaCreacionDepartamento'], $fechaActual, "1900-01-01", 1);                       
                         $aErrores['T02_VolumenDeNegocio'] = validacionFormularios::comprobarFloatMonetarioES($_REQUEST['T02_VolumenDeNegocio'], PHP_FLOAT_MAX, 0, 1);
 
-                        //recorre el array de errores para detectar si hay alguno
+                        //recorre el array de errores para detectar si hay alguno de validación
                         foreach ($aErrores as $campo => $valorCampo) {
                             if ($valorCampo != null) {
                                 $entradaOK = false; 
+                            }
+                        }
+
+                        // Si la validación ha ido bien, intentamos insertar en la BD
+                        if ($entradaOK) {
+                            $aRespuestas['T02_CodDepartamento'] = $_REQUEST['T02_CodDepartamento'];
+                            $aRespuestas['T02_DescDepartamento'] = $_REQUEST['T02_DescDepartamento'];
+                            $aRespuestas['T02_FechaCreacionDepartamento'] = $_REQUEST['T02_FechaCreacionDepartamento'];
+                            $aRespuestas['T02_VolumenDeNegocio'] = floatval(str_replace(',', '.', $_REQUEST['T02_VolumenDeNegocio']));
+
+                            try {
+                                $miDB = new PDO(DSN, USERNAME, PASSWORD);
+                                $sqlInsert = <<<sql
+                                    INSERT INTO T02_Departamento (T02_CodDepartamento, T02_DescDepartamento, T02_FechaCreacionDepartamento, T02_VolumenDeNegocio, T02_FechaBajaDepartamento)
+                                    VALUES (?, ?, ?, ?, null)
+sql;
+                                $consultaInsert = $miDB->prepare($sqlInsert);
+                                $consultaInsert->bindParam(1, $aRespuestas['T02_CodDepartamento']);
+                                $consultaInsert->bindParam(2, $aRespuestas['T02_DescDepartamento']);
+                                $consultaInsert->bindParam(3, $aRespuestas['T02_FechaCreacionDepartamento']);
+                                $consultaInsert->bindParam(4, $aRespuestas['T02_VolumenDeNegocio']);
+                                
+                                $consultaInsert->execute();
+                            } catch(PDOException $ePDO) {
+                                if ($ePDO->getCode() == 23000) {
+                                    // Si existe el código en BD, guardamos el error y forzamos repintar formulario
+                                    $aErrores['T02_CodDepartamento'] = "Error: El código del departamento ya existe en la Base de Datos.";
+                                    $entradaOK = false; 
+                                } else {
+                                    echo 'Error en la base de datos: ' . $ePDO->getMessage();
+                                    die(); // Detenemos en caso de error grave no contemplado
+                                }
+                            } finally {
+                                unset($miDB);
                             }
                         }
                     } else {
@@ -96,57 +130,35 @@
                         $entradaOK = false;
                     }
 
-                    //Tratamiento del formulario
-                    if ($entradaOK) {
-                        //Rellenamos el array de respuesta con los valores que ha introducido el usuario
-                        $aRespuestas['T02_CodDepartamento'] = $_REQUEST['T02_CodDepartamento'];
-                        $aRespuestas['T02_DescDepartamento'] = $_REQUEST['T02_DescDepartamento'];
-                        $aRespuestas['T02_FechaCreacionDepartamento'] = $_REQUEST['T02_FechaCreacionDepartamento'];
-                        $aRespuestas['T02_VolumenDeNegocio'] = floatval(str_replace(',', '.', $_REQUEST['T02_VolumenDeNegocio']));
+                    
+                    if ($entradaOK) { // Sólo entra si la validación fue bien Y no saltó error de duplicidad
+                        
+                        echo '<p class="exito">¡El departamento ha sido insertado correctamente en la Base de Datos!</p>';
 
                         try {
                             $miDB = new PDO(DSN, USERNAME, PASSWORD);
-                            
-                            $sqlInsert = <<<sql
-                                INSERT INTO T02_Departamento (T02_CodDepartamento, T02_DescDepartamento, T02_FechaCreacionDepartamento, T02_VolumenDeNegocio, T02_FechaBajaDepartamento)
-                                VALUES (?, ?, ?, ?, null)
-                            sql;
-                            
-                            $consultaInsert = $miDB->prepare($sqlInsert);
-                            $consultaInsert->bindParam(1, $aRespuestas['T02_CodDepartamento']);
-                            $consultaInsert->bindParam(2, $aRespuestas['T02_DescDepartamento']);
-                            $consultaInsert->bindParam(3, $aRespuestas['T02_FechaCreacionDepartamento']);
-                            $consultaInsert->bindParam(4, $aRespuestas['T02_VolumenDeNegocio']);
-                            
-                            if($consultaInsert->execute()){
-                                echo '<p class="exito">¡El departamento ha sido insertado correctamente en la Base de Datos!</p>';
-                            }
-                            
                             $sqlSelect = "SELECT * FROM T02_Departamento";
                             $consultaSelect = $miDB->query($sqlSelect);
                         
                             echo '<table>';
                             echo '<tr class="titulo">';
                             echo '<th>Código</th>';
-                            echo '<th class="alinear-izq">Descripción</th>'; // Alineado a la izquierda
+                            echo '<th class="alinear-izq">Descripción</th>'; 
                             echo '<th>Fecha de Creación</th>';
-                            echo '<th class="alinear-der">Volumen de Negocio</th>'; // Alineado a la derecha
+                            echo '<th class="alinear-der">Volumen de Negocio</th>'; 
                             echo '<th>Fecha de Baja</th>';                       
                             echo '</tr>';
 
                             while ($Departamento = $consultaSelect->fetchObject()){                              
-                                // Comprobamos si el código de esta fila es igual al que acabamos de insertar para resaltarlo
                                 if ($Departamento->T02_CodDepartamento === $aRespuestas['T02_CodDepartamento']) {
                                     echo '<tr class="nuevaFila">'; 
                                 } else {
                                     echo '<tr>'; 
                                 }
                                 
-                                // Datos básicos
                                 echo '<td>' . htmlspecialchars($Departamento->T02_CodDepartamento) . '</td>';
-                                echo '<td class="alinear-izq">' . htmlspecialchars($Departamento->T02_DescDepartamento) . '</td>'; // Alineado a la izquierda
+                                echo '<td class="alinear-izq">' . htmlspecialchars($Departamento->T02_DescDepartamento) . '</td>';
 
-                                // Procesamiento de Fecha de Creación
                                 if (!empty($Departamento->T02_FechaCreacionDepartamento)) {
                                     $oFechaCreacion = new DateTime($Departamento->T02_FechaCreacionDepartamento);
                                     echo '<td>' . $oFechaCreacion->format('d/m/Y') . '</td>';
@@ -154,10 +166,8 @@
                                     echo '<td>Desconocida</td>';
                                 }
 
-                                // Formateamos el float para que se vea en €
-                                echo '<td class="alinear-der">' . number_format((float)$Departamento->T02_VolumenDeNegocio, 2, ',', '.') . ' €</td>'; // Alineado a la derecha
+                                echo '<td class="alinear-der">' . number_format((float)$Departamento->T02_VolumenDeNegocio, 2, ',', '.') . ' €</td>'; 
 
-                                // Procesamiento de Fecha de Baja
                                 if (is_null($Departamento->T02_FechaBajaDepartamento) || empty($Departamento->T02_FechaBajaDepartamento)) {
                                     echo '<td></td>';
                                 } else {
@@ -166,24 +176,17 @@
                                 }
                                 echo '</tr>';
                             }
-
                             echo '</table>';
-                        
                             echo '<br><a href="' . $_SERVER['PHP_SELF'] . '"><button>Volver a insertar otro</button></a>';
-                        
+
                         } catch(PDOException $ePDO) {
-                            if ($ePDO->getCode() == 23000) {
-                                echo '<p style="color:red; text-align:center;">Error: El código del departamento ya existe en la Base de Datos.</p>';
-                                echo '<br><a href="' . $_SERVER['PHP_SELF'] . '"><button>Volver</button></a>';
-                            } else {
-                                echo 'Error al conectarse o insertar: ' . $ePDO->getMessage();
-                            }
+                            echo 'Error al conectarse: ' . $ePDO->getMessage();
                         } finally {
                             unset($miDB);
                         }
 
                     } else {
-                        // Mostrar formulario
+                        // Mostrar formulario (incluye errores de validación y de clave duplicada en la base de datos)
                     ?>
                     <section>
                         <h2>Alta de departamento.</h2>
@@ -191,25 +194,22 @@
 
                             <label for="T02_CodDepartamento">Código: </label>
                             <span class="error"><?php echo $aErrores['T02_CodDepartamento'] ?></span>
-                            <!-- Se imprime si hay REQUEST y su error está vacío -->
-                            <input class="obligatorio" name="T02_CodDepartamento" id="T02_CodDepartamento" type="text" title="Debe contener exactamente 3 letras mayúsculas" value="<?php echo !empty($_REQUEST['T02_CodDepartamento']) && empty($aErrores['T02_CodDepartamento']) ? htmlspecialchars($_REQUEST['T02_CodDepartamento']) : ''; ?>"><br>
+                            <!-- Se mantiene lo escrito si da error, excepto si el error era que ya existía en BD y queremos obligarle a borrarlo. Aquí conservamos por defecto. -->
+                            <input class="obligatorio" name="T02_CodDepartamento" id="T02_CodDepartamento" type="text" title="Debe contener exactamente 3 letras mayúsculas" value="<?php echo !empty($_REQUEST['T02_CodDepartamento']) && empty($aErrores['T02_CodDepartamento']) ? htmlspecialchars($_REQUEST['T02_CodDepartamento']) : (!empty($_REQUEST['T02_CodDepartamento']) ? htmlspecialchars($_REQUEST['T02_CodDepartamento']) : ''); ?>"><br>
                             <br>
                             
                             <label for="T02_DescDepartamento">Descripción: </label>
                             <span class="error"><?php echo $aErrores['T02_DescDepartamento'] ?></span>
-                            <!-- Se imprime si hay REQUEST y su error está vacío -->
                             <input class="obligatorio" name="T02_DescDepartamento" id="T02_DescDepartamento" type="text" value="<?php echo !empty($_REQUEST['T02_DescDepartamento']) && empty($aErrores['T02_DescDepartamento']) ? htmlspecialchars($_REQUEST['T02_DescDepartamento']) : ''; ?>"><br>
                             <br>
                             
                             <label for="T02_FechaCreacionDepartamento">Fecha de creación: </label>
                             <span class="error"><?php echo $aErrores['T02_FechaCreacionDepartamento'] ?></span>
-                            <!-- Si hay error, se reinicia a la fecha actual -->
                             <input type="date" name="T02_FechaCreacionDepartamento" id="T02_FechaCreacionDepartamento" max="<?php echo $fechaActual; ?>" value="<?php echo !empty($_REQUEST['T02_FechaCreacionDepartamento']) && empty($aErrores['T02_FechaCreacionDepartamento']) ? htmlspecialchars($_REQUEST['T02_FechaCreacionDepartamento']) : $fechaActual; ?>"><br>
                             <br>
                             
                             <label for="T02_VolumenDeNegocio">Volumen de negocio: </label>
                             <span class="error"><?php echo $aErrores['T02_VolumenDeNegocio'] ?></span>
-                            <!-- Se imprime si hay REQUEST y su error está vacío -->
                             <input type="text" name="T02_VolumenDeNegocio" id="T02_VolumenDeNegocio" title="Usar comas para separar decimales" value="<?php echo !empty($_REQUEST['T02_VolumenDeNegocio']) && empty($aErrores['T02_VolumenDeNegocio']) ? htmlspecialchars($_REQUEST['T02_VolumenDeNegocio']) : ''; ?>"><br>
                             <br>
                             
