@@ -36,6 +36,10 @@
                         <td>ConfigDBPDO</td>
                         <td><a href="./mostrarCodigo/muestraconfigDBPDO.php" class="btn btn-codigo">Codigo</a></td>
                     </tr>
+                    <tr>
+                        <td>EEConfigDBPDO</td>
+                        <td><a href="./mostrarCodigo/muestraEEconfigDBPDO.php" class="btn btn-codigo">Codigo</a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
