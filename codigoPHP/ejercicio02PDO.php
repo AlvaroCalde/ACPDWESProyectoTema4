@@ -7,6 +7,9 @@
             *{ margin: 0 auto; padding: 0 auto; }
             nav{ background-color: black; color: white; padding: 5px; text-align: center}
             span{ color: red; }
+            table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+            td, th { border: 1px solid black; padding: 8px; text-align: center; }
+            .titulo th { font-weight: bold; background-color: #ddd; }
             .ejercicio{
                 padding: 50px;
                 margin-top: 10px;
