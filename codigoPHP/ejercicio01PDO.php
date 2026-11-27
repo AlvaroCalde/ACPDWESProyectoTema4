@@ -5,7 +5,7 @@
         <style>
             input[type="text"],input[type="date"],input[type="number"]{ background-color: #fff9c4; }
             *{ margin: 0 auto; padding: 0 auto; }
-            nav{ background-color: black; color: white; }
+            nav{ background-color: black; color: white; padding: 5px; text-align: center}
             span{ color: red; }
             .ejercicio{
                 padding: 50px;
@@ -91,7 +91,6 @@
             <div>
                 <a href="../../ACPDWESProyectoDWES/indexProyectoDWES.php" color="white">Álvaro Calderón Pérez</a>
                 <a href="../indexProyectoTema4.php"><img src="../webroot/images/casa_blanca.png" alt="home"></a>
-                <time datetime="2026-10-16">16-10-2026</time>
             </div>
         </footer>
     </body>

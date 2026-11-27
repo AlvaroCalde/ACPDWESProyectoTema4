@@ -1,0 +1,5 @@
+DirectoryIndex indexProyectoTema4.php
+Options -Indexes
+
+ErrorDocument 404 /error/error.html
+ErrorDocument 403 /error/403.html
